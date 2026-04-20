@@ -258,17 +258,17 @@ cdef extern from "imgui.h":
         int        Capacity
         T*         Data
         
-    ctypedef struct ImGuiListClipper: # ✗
+    ctypedef struct ImGuiListClipper: # ✓
         int     DisplayStart # ✗
         int     DisplayEnd # ✗
         
-        void Begin( # ✗
+        void Begin( # ✓
             int items_count, 
             # note: optional
             float items_height      #= -1.0f
         ) except +
-        void End() except + # ✗
-        bool Step() except + # ✗
+        void End() except + # ✓
+        bool Step() except + # ✓
         
     cdef cppclass ImColor: # ✗
         ImVec4              Value # ✗
