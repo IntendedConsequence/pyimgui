@@ -2909,6 +2909,20 @@ cdef class GlyphRanges(object):
         free(<void*>self.ranges_ptr)
         self.ranges_ptr = NULL
 
+cdef class ListClipper(object):
+    cdef cimgui.ImGuiListClipper clipper
+
+    def __init__(self):
+        pass
+
+    def begin(self, int items_count, float items_height=-1.0):
+        self.clipper.Begin(items_count, items_height)
+
+    def end(self):
+        self.clipper.End()
+
+    def step(self):
+        return self.clipper.Step()
 
 cdef class FontConfig(object):
     cdef cimgui.ImFontConfig config
