@@ -31,11 +31,11 @@ from libcpp cimport bool
 FLOAT_MIN = FLT_MIN
 FLOAT_MAX = FLT_MAX
 
-cimport cimgui
-cimport core
-cimport enums
-cimport ansifeed
-cimport internal
+from . cimport cimgui
+from . cimport core
+from . cimport enums
+from . cimport ansifeed
+from . cimport internal
 
 from cpython.version cimport PY_MAJOR_VERSION
 
@@ -3681,7 +3681,7 @@ cdef class _InputTextSharedBuffer(object):
 
 cdef _InputTextSharedBuffer _input_text_shared_buffer = _InputTextSharedBuffer() 
     
-cdef int _ImGuiInputTextCallback(cimgui.ImGuiInputTextCallbackData* data):
+cdef int _ImGuiInputTextCallback(cimgui.ImGuiInputTextCallbackData* data) noexcept:
     cdef _ImGuiInputTextCallbackData callback_data = _ImGuiInputTextCallbackData.from_ptr(data)
     callback_data._require_pointer()
     
@@ -3693,7 +3693,7 @@ cdef int _ImGuiInputTextCallback(cimgui.ImGuiInputTextCallbackData* data):
     cdef ret = (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
     return ret if ret is not None else 0
 
-cdef int _ImGuiInputTextOnlyResizeCallback(cimgui.ImGuiInputTextCallbackData* data):
+cdef int _ImGuiInputTextOnlyResizeCallback(cimgui.ImGuiInputTextCallbackData* data) noexcept:
     # This callback is used internally if user asks for buffer resizing but does not provide any python callback function.
 
     if data.EventFlag == enums.ImGuiInputTextFlags_CallbackResize:
@@ -3847,7 +3847,7 @@ cdef class _ImGuiInputTextCallbackData(object):
         
         
 
-cdef void _ImGuiSizeCallback(cimgui.ImGuiSizeCallbackData* data):
+cdef void _ImGuiSizeCallback(cimgui.ImGuiSizeCallbackData* data) noexcept:
     cdef _ImGuiSizeCallbackData callback_data = _ImGuiSizeCallbackData.from_ptr(data)
     callback_data._require_pointer()
     (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
@@ -9999,7 +9999,7 @@ def plot_lines(
         float scale_min = FLOAT_MAX,
         float scale_max = FLOAT_MAX,
         graph_size = (0, 0),
-        int stride = sizeof(float),
+        int stride = 0,
     ):
 
     """
@@ -10060,6 +10060,8 @@ def plot_lines(
                 int stride = sizeof(float)
             )
     """
+    if stride == 0:
+        stride = sizeof(float)
     if values_count == -1:
         values_count = <int>values.shape[0]
 
@@ -10091,7 +10093,7 @@ def plot_histogram(
         float scale_min = FLT_MAX,
         float scale_max = FLT_MAX,
         graph_size = (0, 0),
-        int stride = sizeof(float),
+        int stride = 0,
     ):
     """
     Plot a histogram of float values.
@@ -10152,6 +10154,8 @@ def plot_histogram(
                 int stride
             )
     """
+    if stride == 0:
+        stride = sizeof(float)
     if values_count == -1:
         values_count = <int>values.shape[0]
 

@@ -8,9 +8,8 @@ Notes:
    `✗` marks API element as "yet to be mapped
 """
 
-cimport cimgui
-
-from cimgui cimport ImVec4
+from . cimport cimgui
+from .cimgui cimport ImVec4
 
 cdef extern from "../ansifeed-cpp/AnsiTextColored.h" namespace "ImGui":
     void TextAnsi(const char* fmt, ...) except +  # ✓
