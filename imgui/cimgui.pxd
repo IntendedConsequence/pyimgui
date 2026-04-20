@@ -259,8 +259,8 @@ cdef extern from "imgui.h":
         T*         Data
         
     ctypedef struct ImGuiListClipper: # ✓
-        int     DisplayStart # ✗
-        int     DisplayEnd # ✗
+        int     DisplayStart # ✓
+        int     DisplayEnd # ✓
         
         void Begin( # ✓
             int items_count, 

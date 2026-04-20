@@ -2915,6 +2915,14 @@ cdef class ListClipper(object):
     def __init__(self):
         pass
 
+    @property
+    def display_start(self):
+        return self.clipper.DisplayStart
+
+    @property
+    def display_end(self):
+        return self.clipper.DisplayEnd
+
     def begin(self, int items_count, float items_height=-1.0):
         self.clipper.Begin(items_count, items_height)
 
