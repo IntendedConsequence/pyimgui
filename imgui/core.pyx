@@ -3683,23 +3683,30 @@ cdef _InputTextSharedBuffer _input_text_shared_buffer = _InputTextSharedBuffer()
     
 cdef int _ImGuiInputTextCallback(cimgui.ImGuiInputTextCallbackData* data) noexcept:
     cdef _ImGuiInputTextCallbackData callback_data = _ImGuiInputTextCallbackData.from_ptr(data)
-    callback_data._require_pointer()
-    
-    if data.EventFlag == enums.ImGuiInputTextFlags_CallbackResize:
-        if data.BufSize != _input_text_shared_buffer.size:
-            _input_text_shared_buffer.reserve_memory(data.BufSize)
-            data.Buf = _input_text_shared_buffer.buffer
+    cdef object ret = None
 
-    cdef ret = (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
+    callback_data._require_pointer()
+    try:
+
+        if data.EventFlag == enums.ImGuiInputTextFlags_CallbackResize:
+            if data.BufSize != _input_text_shared_buffer.size:
+                _input_text_shared_buffer.reserve_memory(data.BufSize)
+                data.Buf = _input_text_shared_buffer.buffer
+
+        ret = (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
+    except Exception:
+        pass
     return ret if ret is not None else 0
 
 cdef int _ImGuiInputTextOnlyResizeCallback(cimgui.ImGuiInputTextCallbackData* data) noexcept:
     # This callback is used internally if user asks for buffer resizing but does not provide any python callback function.
-
-    if data.EventFlag == enums.ImGuiInputTextFlags_CallbackResize:
-        if data.BufSize != _input_text_shared_buffer.size:
-            _input_text_shared_buffer.reserve_memory(data.BufSize)
-            data.Buf = _input_text_shared_buffer.buffer
+    try:
+        if data.EventFlag == enums.ImGuiInputTextFlags_CallbackResize:
+            if data.BufSize != _input_text_shared_buffer.size:
+                _input_text_shared_buffer.reserve_memory(data.BufSize)
+                data.Buf = _input_text_shared_buffer.buffer
+    except Exception:
+        pass
 
     return 0
     
@@ -3850,7 +3857,11 @@ cdef class _ImGuiInputTextCallbackData(object):
 cdef void _ImGuiSizeCallback(cimgui.ImGuiSizeCallbackData* data) noexcept:
     cdef _ImGuiSizeCallbackData callback_data = _ImGuiSizeCallbackData.from_ptr(data)
     callback_data._require_pointer()
-    (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
+
+    try:
+        (<_callback_user_info>callback_data._ptr.UserData).callback_fn(callback_data)
+    except Exception:
+        pass
     return
     
 cdef class _ImGuiSizeCallbackData(object):
