@@ -12,6 +12,7 @@ __all__ = (
     "styled",
     "istyled",
     "colored",
+    "scoped",
     "vertex_buffer_vertex_pos_offset",
     "vertex_buffer_vertex_uv_offset",
     "vertex_buffer_vertex_col_offset",
